@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: camcap
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn camcap.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.6"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: RENDER
+        value: "true"

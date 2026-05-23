@@ -3,11 +3,19 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-camcap-x9k2m$3n!w7@fj&q8r5t1v0z6y4u'
+# Use environment variable for secret key in production
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-camcap-x9k2m$3n!w7@fj&q8r5t1v0z6y4u')
 
-DEBUG = True
+# Detect if running on Render
+IS_RENDER = os.environ.get('RENDER', '') == 'true'
+
+DEBUG = not IS_RENDER
 
 ALLOWED_HOSTS = ['*']
+if IS_RENDER:
+    RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+    if RENDER_EXTERNAL_HOSTNAME:
+        ALLOWED_HOSTS = [RENDER_EXTERNAL_HOSTNAME, '.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,6 +29,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -63,6 +72,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = []
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise for production static file serving
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -72,3 +89,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Maximum upload/download size (2GB for large video files)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2147483648
+
+# CSRF trusted origins for Render
+if IS_RENDER:
+    CSRF_TRUSTED_ORIGINS = [f'https://{RENDER_EXTERNAL_HOSTNAME}'] if os.environ.get('RENDER_EXTERNAL_HOSTNAME') else ['https://*.onrender.com']
