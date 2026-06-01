@@ -1,0 +1,85 @@
+{% extends "converter/base.html" %}
+
+{% block title %}Checkout — CamCap{% endblock %}
+
+{% block content %}
+<section class="checkout-section mt-4">
+    <div class="section-header center">
+        <h2 class="section-title">Checkout</h2>
+    </div>
+
+    <div class="checkout-grid">
+        <div class="checkout-form-container card p-4">
+            <h3>Shipping Details</h3>
+            <form action="{% url 'shop:place_order' %}" method="POST" id="checkoutForm">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="{{ quantity }}">
+                
+                <div class="form-group mt-3">
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" class="input-field w-100" required>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" class="input-field w-100" required>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label>Email (Optional)</label>
+                    <input type="email" name="email" class="input-field w-100" value="{{ user.email }}">
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label>Address</label>
+                    <textarea name="address" class="input-field w-100" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-row mt-3" style="display: flex; gap: 16px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>City</label>
+                        <input type="text" name="city" class="input-field w-100" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>State</label>
+                        <input type="text" name="state" class="input-field w-100" required>
+                    </div>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label>Pincode</label>
+                    <input type="text" name="pincode" class="input-field w-100" required>
+                </div>
+
+                <div class="form-group mt-4">
+                    <h3>Payment Method</h3>
+                    <div class="payment-option mt-2">
+                        <label class="d-flex" style="align-items: center; gap: 8px;">
+                            <input type="radio" name="payment" value="cod" checked>
+                            <span>Cash on Delivery (COD)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">Place Order</button>
+            </form>
+        </div>
+        
+        <div class="order-summary card p-4">
+            <h3>Order Summary</h3>
+            <div class="summary-item mt-3">
+                <span class="text-secondary">{{ product.name }} x {{ quantity }}</span>
+                <span>₹{{ total }}</span>
+            </div>
+            <div class="summary-item mt-2">
+                <span class="text-secondary">Shipping</span>
+                <span class="text-green">Free</span>
+            </div>
+            <div class="summary-total mt-3 pt-3" style="border-top: 1px solid var(--border);">
+                <strong>Total Amount</strong>
+                <strong class="text-orange">₹{{ total }}</strong>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

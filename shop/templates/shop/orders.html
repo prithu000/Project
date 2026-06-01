@@ -1,0 +1,52 @@
+{% extends "converter/base.html" %}
+
+{% block title %}My Orders — CamCap{% endblock %}
+
+{% block content %}
+<section class="mt-4">
+    <div class="section-header">
+        <h2 class="section-title">My Orders</h2>
+    </div>
+
+    {% if orders %}
+        <div class="orders-list mt-4" style="display: flex; flex-direction: column; gap: 16px;">
+            {% for order in orders %}
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between mb-3" style="border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                        <div>
+                            <strong>{{ order.order_id }}</strong>
+                            <span class="text-secondary ml-3" style="font-size: 0.85rem;">{{ order.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <span class="badge" style="background: rgba(249, 115, 22, 0.1); color: var(--orange); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">
+                            {{ order.get_status_display }}
+                        </span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between" style="align-items: center;">
+                        <div class="d-flex" style="gap: 16px; align-items: center;">
+                            <div style="width: 60px; height: 60px; background: var(--bg-secondary); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 style="margin: 0;">{{ order.product.name }}</h4>
+                                <p class="text-secondary" style="margin: 4px 0 0; font-size: 0.85rem;">Qty: {{ order.quantity }}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <strong style="font-size: 1.1rem;">₹{{ order.total_price }}</strong>
+                            <p class="text-muted" style="margin: 4px 0 0; font-size: 0.8rem;">Cash on Delivery</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card p-5 center mt-4">
+            <p class="text-secondary mb-4">You haven't placed any orders yet.</p>
+            <a href="{% url 'shop:product' %}" class="btn btn-primary">Shop CamCap</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

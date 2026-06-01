@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CamCap — Capture. Vlog. Share.">
+    <title>{% block title %}CamCap{% endblock %}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'converter/css/style.css' %}">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- Header -->
+    <header class="header" id="mainHeader">
+        <div class="header-inner">
+            <a href="/" class="logo-group" style="text-decoration: none;">
+                <img src="{% static 'ChatGPT Image Jun 1, 2026, 10_31_22 PM.png' %}" alt="CamCap Logo" class="logo-img">
+                <h1 class="logo-text">Cam<span class="logo-accent">Cap</span></h1>
+            </a>
+            
+            <nav class="header-nav">
+                <a href="/" class="nav-link">Home</a>
+                <a href="{% url 'shop:product' %}" class="nav-link">Shop</a>
+                <a href="{% url 'converter:convert' %}" class="nav-link">Converter</a>
+                
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="nav-link dropdown-toggle">My Account</button>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'shop:orders' %}">My Orders</a>
+                            <a href="{% url 'shop:checkout' %}">Checkout</a>
+                            <a href="{% url 'shop:logout' %}">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'shop:login' %}" class="nav-link">Login</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <!-- Messages / Toasts -->
+    <div class="toast-container" id="djangoToasts">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="toast {{ message.tags }}">
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="{% static 'ChatGPT Image Jun 1, 2026, 10_31_22 PM.png' %}" alt="CamCap Logo" style="width: 40px;">
+                <span>CamCap</span>
+            </div>
+            <p>CamCap &copy; {% now "Y" %} — Built for dashcam enthusiasts</p>
+        </div>
+    </footer>
+
+    <script>
+        // Auto-hide django messages
+        document.querySelectorAll('.toast').forEach(toast => {
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(40px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        });
+    </script>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

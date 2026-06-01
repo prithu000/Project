@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'converter',
+    'shop',
 ]
 
 MIDDLEWARE = [
@@ -43,7 +44,7 @@ ROOT_URLCONF = 'camcap.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,15 +72,19 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = []
+STATICFILES_DIRS = [
+    BASE_DIR / 'deco',
+    BASE_DIR / 'logo',
+]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # WhiteNoise for production static file serving
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+if not DEBUG:
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -89,6 +94,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Maximum upload/download size (2GB for large video files)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2147483648
+
+# Auth settings
+LOGIN_URL = '/shop/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # CSRF trusted origins for Render
 if IS_RENDER:

@@ -16,8 +16,13 @@ from . import utils
 
 
 def index(request):
-    """Render the main Cam Cap single-page application."""
+    """Render the landing page."""
     return render(request, 'converter/index.html')
+
+
+def convert_page(request):
+    """Render the File System Access API converter page."""
+    return render(request, 'converter/convert.html')
 
 
 @require_GET
@@ -77,44 +82,46 @@ def browse_folder(request):
 @csrf_exempt
 @require_POST
 def merge_and_convert(request):
-    """Merge selected .build files into a single MP4."""
+    """Merge uploaded .build files into a single MP4."""
     try:
-        body = json.loads(request.body)
-        file_paths = body.get('files', [])
-        sort_by = body.get('sort_by', 'name')  # 'name' or 'date'
-        save_to = body.get('save_to', '')  # Custom save location
+        files = request.FILES.getlist('files')
+        sort_by = request.POST.get('sort_by', 'name')  # 'name' or 'date'
         
-        if not file_paths:
+        if not files:
             return JsonResponse({
                 'success': False,
-                'error': 'No files selected',
+                'error': 'No files uploaded',
             }, status=400)
         
-        # Determine output directory
-        if save_to and os.path.isdir(save_to):
-            output_dir = save_to
-        else:
-            # Default to media directory
+        import tempfile
+        import shutil
+        
+        # Save uploaded files to a temporary directory
+        with tempfile.TemporaryDirectory() as temp_dir:
+            file_paths = []
+            for f in files:
+                temp_path = os.path.join(temp_dir, f.name)
+                with open(temp_path, 'wb+') as destination:
+                    for chunk in f.chunks():
+                        destination.write(chunk)
+                file_paths.append(temp_path)
+            
+            # Default to media directory for output
             output_dir = str(settings.MEDIA_ROOT / 'converted')
-        
-        success, result = utils.merge_build_files(file_paths, output_dir, sort_by)
-        
-        if success:
-            return JsonResponse({
-                'success': True,
-                'data': result,
-            })
-        else:
-            return JsonResponse({
-                'success': False,
-                'error': result,
-            }, status=500)
+            
+            success, result = utils.merge_build_files(file_paths, output_dir, sort_by)
+            
+            if success:
+                return JsonResponse({
+                    'success': True,
+                    'data': result,
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'error': result,
+                }, status=500)
     
-    except json.JSONDecodeError:
-        return JsonResponse({
-            'success': False,
-            'error': 'Invalid JSON body',
-        }, status=400)
     except Exception as e:
         return JsonResponse({
             'success': False,

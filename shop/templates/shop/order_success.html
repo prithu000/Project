@@ -1,0 +1,30 @@
+{% extends "converter/base.html" %}
+
+{% block title %}Order Success — CamCap{% endblock %}
+
+{% block content %}
+<section class="mt-4 center">
+    <div class="card p-5 mx-auto" style="max-width: 600px;">
+        <div class="text-green mb-3">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+        </div>
+        <h1 class="mb-3">Order Confirmed!</h1>
+        <p class="text-secondary mb-4">Thank you for your purchase. Your order has been placed successfully.</p>
+        
+        <div class="order-details text-left p-3 mb-4" style="background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--border);">
+            <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+            <p><strong>Amount:</strong> ₹{{ order.total_price }} (Cash on Delivery)</p>
+            <p><strong>Shipping to:</strong> {{ order.full_name }}, {{ order.city }}</p>
+            <p><strong>Status:</strong> <span class="badge text-orange">{{ order.get_status_display }}</span></p>
+        </div>
+        
+        <div class="d-flex center" style="gap: 16px;">
+            <a href="{% url 'shop:orders' %}" class="btn btn-ghost">View My Orders</a>
+            <a href="/" class="btn btn-primary">Return Home</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

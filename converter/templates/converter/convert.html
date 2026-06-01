@@ -1,0 +1,99 @@
+{% extends "converter/base.html" %}
+{% load static %}
+
+{% block title %}CamCap — Convert Files{% endblock %}
+
+{% block content %}
+<section class="section" style="max-width: 800px; margin: 0 auto; margin-top: 2rem;">
+    <div class="section-header center">
+        <h2 class="section-title">File Manager</h2>
+        <p class="section-desc">Select a folder from your phone/SD card to convert .build files</p>
+    </div>
+
+    <!-- Browser File Picker -->
+    <div class="card p-4 text-center" id="pickerContainer">
+        <div style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+        </div>
+        <button class="btn btn-primary btn-lg" id="selectFolderBtn">Select Folder</button>
+        <p class="text-xs text-muted" style="margin-top: 1rem;">Supports OTG and SD cards natively via your browser.</p>
+        
+        <!-- Fallback for older browsers -->
+        <div id="fallbackInput" class="hidden" style="margin-top: 1rem;">
+            <p class="text-sm text-orange">Your browser doesn't support folder picking directly. Use the fallback below:</p>
+            <input type="file" id="fallbackFolderInput" webkitdirectory directory multiple class="btn btn-ghost">
+        </div>
+    </div>
+
+    <!-- Files List Section -->
+    <div id="filesSection" class="hidden mt-4">
+        <div class="section-header">
+            <h3>Found .build Files</h3>
+            <div class="file-actions-top">
+                <button class="btn btn-ghost btn-sm" id="selectAllBtn">Select All</button>
+                <button class="btn btn-ghost btn-sm" id="deselectAllBtn">Deselect All</button>
+            </div>
+        </div>
+        
+        <div class="files-list" id="filesList"></div>
+        
+        <div class="merge-options mt-4">
+            <div class="option-group">
+                <label class="option-label">Sort files by</label>
+                <div class="toggle-group">
+                    <button class="toggle-btn active" data-sort="name" id="sortByName">Name</button>
+                    <button class="toggle-btn" data-sort="date" id="sortByDate">Date</button>
+                </div>
+            </div>
+            
+            <div class="merge-summary" id="mergeSummary">
+                <span class="merge-count">0 files selected</span>
+            </div>
+            
+            <button class="btn btn-primary btn-lg w-100" id="mergeBtn" disabled>Upload & Convert to MP4</button>
+        </div>
+    </div>
+
+    <!-- Processing Section -->
+    <div id="processingSection" class="processing-card hidden mt-4">
+        <div class="processing-icon">
+            <svg class="rotating" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+            </svg>
+        </div>
+        <h3 class="processing-title">Uploading & Converting...</h3>
+        <p class="processing-desc">Please wait while we process your files</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p class="processing-detail" id="processingDetail">Initializing...</p>
+    </div>
+
+    <!-- Result Section -->
+    <div id="resultSection" class="result-card success hidden mt-4">
+        <div class="result-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+        </div>
+        <h3 class="result-title">Conversion Complete!</h3>
+        <div class="result-details" id="resultDetails"></div>
+        
+        <div class="video-preview-container" id="videoPreviewContainer">
+            <video class="video-preview" id="videoPreview" controls></video>
+        </div>
+
+        <div class="result-actions">
+            <a class="btn btn-primary btn-lg" id="downloadBtn" href="#" download>Download MP4</a>
+            <button class="btn btn-ghost btn-lg" id="startOverBtn">Convert More</button>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'converter/js/convert.js' %}"></script>
+{% endblock %}
