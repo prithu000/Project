@@ -1,9 +1,30 @@
-django>=5.0
-psutil>=5.9
-gunicorn>=21.2
-whitenoise>=6.5
-dj-database-url>=2.1
-django-allauth>=0.57.0
-razorpay>=2.0.0
-python-dotenv>=1.0.0
+# Core Django
+Django==5.2.8
+python-dotenv==1.1.0
+
+# Authentication
+django-allauth==65.18.0
+
+# Payment Gateway
+razorpay==2.0.1
+
+# Production Server
+gunicorn==26.0.0
+whitenoise==6.12.0
+
+# Database
+dj-database-url==2.1.0
+psycopg2-binary==2.9.9
+
+# Utilities
+Pillow==11.0.0
+psutil==6.1.0
+requests==2.32.3
+
+# Additional dependencies
+certifi>=2024.0.0
+charset-normalizer>=3.3.0
+idna>=3.6
+urllib3>=2.2.0
 PyJWT==2.10.1
+cryptography
