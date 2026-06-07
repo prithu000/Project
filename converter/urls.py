@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/check-ffmpeg/', views.check_ffmpeg_status, name='check_ffmpeg'),
     path('api/preview/<str:filename>/', views.preview_file, name='preview_file'),
     path('api/download/<str:filename>/', views.download_file, name='download_file'),
+    path('how-to-use/', views.how_to_use_page, name='how_to_use'),
 ]

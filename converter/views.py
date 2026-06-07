@@ -20,6 +20,11 @@ def index(request):
     return render(request, 'converter/index.html')
 
 
+def how_to_use_page(request):
+    """Render the How to Use guide."""
+    return render(request, 'converter/how_to_use.html')
+
+
 def convert_page(request):
     """Render the File System Access API converter page."""
     return render(request, 'converter/convert.html')
