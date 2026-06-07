@@ -101,8 +101,8 @@ def place_order(request):
         order.save()
     
     # Send email notifications
-    send_order_confirmation_to_admin(order)
-    send_order_confirmation_to_customer(order)
+    #send_order_confirmation_to_admin(order)
+    #send_order_confirmation_to_customer(order)
     
     messages.success(request, f'Order placed successfully! Your order ID is {order.order_id}')
     return redirect('shop:order_success', order_id=order.id)
