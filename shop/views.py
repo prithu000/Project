@@ -53,7 +53,11 @@ def checkout_page(request):
     if not product:
         return redirect('shop:product')
     
-    quantity = int(request.GET.get('qty', 1))
+    try:
+        quantity = int(request.GET.get('qty', 1))
+    except (ValueError, TypeError):
+        quantity = 1
+        
     total = product.price * quantity
     
     return render(request, 'shop/checkout.html', {
@@ -72,7 +76,11 @@ def place_order(request):
         messages.error(request, 'Product not found.')
         return redirect('shop:product')
     
-    quantity = int(request.POST.get('quantity', 1))
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except (ValueError, TypeError):
+        quantity = 1
+        
     total = product.price * quantity
     payment_method = request.POST.get('payment', 'cod')
     
