@@ -8,7 +8,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Use environment variable for secret key in production
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-camcap-x9k2m$3n!w7@fj&q8r5t1v0z6y4u')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-secret-key-here-change-in-production')
 
 # Detect if running on Render
 IS_RENDER = os.environ.get('RENDER', '') == 'true'
@@ -144,15 +144,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Gmail SMTP
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'rahul.business940@gmail.com'
-EMAIL_HOST_PASSWORD = 'bfsbxbpxgkohdzby'  # Correct app password (no spaces)
-DEFAULT_FROM_EMAIL = 'CamCap <rahul.business940@gmail.com>'
-ADMIN_EMAIL = 'rahul.business940@gmail.com'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'your-email@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'your-app-password')
+DEFAULT_FROM_EMAIL = f'CamCap <{os.environ.get("EMAIL_HOST_USER", "your-email@gmail.com")}>'
+ADMIN_EMAIL = os.environ.get('EMAIL_HOST_USER', 'your-email@gmail.com')
 
 # CSRF trusted origins for Render
 if IS_RENDER:
     CSRF_TRUSTED_ORIGINS = [f'https://{RENDER_EXTERNAL_HOSTNAME}'] if os.environ.get('RENDER_EXTERNAL_HOSTNAME') else ['https://*.onrender.com']
 
 # Razorpay Configuration
-RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_SyhSb0GMqxIEo5')
-RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'SPk8sOAi2ipT0oKaTow7Znrv')
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'your-razorpay-key-id')
+RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'your-razorpay-secret')
