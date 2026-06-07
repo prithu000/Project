@@ -23,6 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('downloadBtn');
     const startOverBtn = document.getElementById('startOverBtn');
     
+    // Modal Elements
+    const videoModal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalTitle = document.getElementById('modalTitle');
+    let currentPreviewUrl = null;
+    
     let allBuildFiles = [];
     let selectedFiles = new Set();
     
@@ -90,21 +97,29 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function renderFilesList() {
         filesList.innerHTML = allBuildFiles.map((f, i) => `
-            <div class="file-item ${selectedFiles.has(i) ? 'selected' : ''}" data-index="${i}">
-                <div class="file-checkbox"></div>
-                <div class="file-info">
-                    <div class="file-name">${f.name}</div>
-                    <div class="file-meta">
-                        <span>${formatSize(f.size)}</span>
-                        <span>${new Date(f.lastModified).toLocaleDateString()}</span>
+            <div class="file-item ${selectedFiles.has(i) ? 'selected' : ''}" data-index="${i}" style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                    <div class="file-checkbox"></div>
+                    <div class="file-info">
+                        <div class="file-name">${f.name}</div>
+                        <div class="file-meta">
+                            <span>${formatSize(f.size)}</span>
+                            <span>${new Date(f.lastModified).toLocaleDateString()}</span>
+                        </div>
                     </div>
                 </div>
+                <button class="btn btn-ghost btn-sm preview-btn" data-index="${i}" style="padding: 4px 10px; font-size: 0.8rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Preview
+                </button>
             </div>
         `).join('');
         
-        // Add click events
+        // Add click events for selection
         document.querySelectorAll('.file-item').forEach(item => {
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (e) => {
+                if (e.target.closest('.preview-btn')) return; // Ignore clicks on preview button
+                
                 const idx = parseInt(item.dataset.index);
                 if (selectedFiles.has(idx)) {
                     selectedFiles.delete(idx);
@@ -113,6 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 renderFilesList();
                 updateSummary();
+            });
+        });
+        
+        // Add click events for preview
+        document.querySelectorAll('.preview-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = parseInt(btn.dataset.index);
+                const file = allBuildFiles[idx];
+                openPreviewModal(file);
             });
         });
         
@@ -125,6 +150,38 @@ document.addEventListener('DOMContentLoaded', () => {
         mergeSummary.innerHTML = `<span class="merge-count">${selectedFiles.size} file${selectedFiles.size !== 1 ? 's' : ''} selected</span>`;
         mergeBtn.disabled = selectedFiles.size === 0;
     }
+    
+    // Modal Logic
+    function openPreviewModal(file) {
+        modalTitle.textContent = `Preview: ${file.name}`;
+        
+        if (currentPreviewUrl) {
+            URL.revokeObjectURL(currentPreviewUrl);
+        }
+        
+        // Try setting standard mp4 MIME type just in case browser rejects unknown .build
+        const blob = new Blob([file], { type: 'video/mp4' });
+        currentPreviewUrl = URL.createObjectURL(blob);
+        
+        modalVideo.src = currentPreviewUrl;
+        videoModal.classList.remove('hidden');
+        modalVideo.play().catch(e => console.warn('Autoplay prevented', e));
+    }
+    
+    function closePreviewModal() {
+        videoModal.classList.add('hidden');
+        modalVideo.pause();
+        modalVideo.src = '';
+        if (currentPreviewUrl) {
+            URL.revokeObjectURL(currentPreviewUrl);
+            currentPreviewUrl = null;
+        }
+    }
+    
+    closeModalBtn.addEventListener('click', closePreviewModal);
+    videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) closePreviewModal();
+    });
     
     // Select All / Deselect All
     document.getElementById('selectAllBtn').addEventListener('click', () => {
