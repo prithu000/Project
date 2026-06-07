@@ -114,6 +114,20 @@ def merge_and_convert(request):
             # Default to media directory for output
             output_dir = str(settings.MEDIA_ROOT / 'converted')
             
+            # Auto-cleanup old converted files to save disk space on EC2/Production
+            import time
+            current_time = time.time()
+            if os.path.exists(output_dir):
+                for fname in os.listdir(output_dir):
+                    fpath = os.path.join(output_dir, fname)
+                    if os.path.isfile(fpath):
+                        # Delete files older than 2 hours (7200 seconds)
+                        if current_time - os.path.getmtime(fpath) > 7200:
+                            try:
+                                os.remove(fpath)
+                            except OSError:
+                                pass
+                                
             success, result = utils.merge_build_files(file_paths, output_dir, sort_by)
             
             if success:

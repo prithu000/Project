@@ -10,16 +10,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Use environment variable for secret key in production
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-secret-key-here-change-in-production')
 
-# Detect if running on Render
-IS_RENDER = os.environ.get('RENDER', '') == 'true'
+# Detect if running in production (EC2, Render, etc.)
+IS_PRODUCTION = os.environ.get('ENVIRONMENT', '') == 'production' or os.environ.get('RENDER', '') == 'true'
 
-DEBUG = not IS_RENDER
+DEBUG = not IS_PRODUCTION
 
+# Allowed Hosts
 ALLOWED_HOSTS = ['*']
-if IS_RENDER:
-    RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-    if RENDER_EXTERNAL_HOSTNAME:
-        ALLOWED_HOSTS = [RENDER_EXTERNAL_HOSTNAME, '.onrender.com']
+if IS_PRODUCTION:
+    hosts_env = os.environ.get('ALLOWED_HOSTS')
+    if hosts_env:
+        ALLOWED_HOSTS = [h.strip() for h in hosts_env.split(',')]
+    elif os.environ.get('RENDER_EXTERNAL_HOSTNAME'):
+        ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME'), '.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -158,9 +161,14 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'your-app-password')
 DEFAULT_FROM_EMAIL = f'CamCap <{os.environ.get("EMAIL_HOST_USER", "your-email@gmail.com")}>'
 ADMIN_EMAIL = os.environ.get('EMAIL_HOST_USER', 'your-email@gmail.com')
 
-# CSRF trusted origins for Render
-if IS_RENDER:
-    CSRF_TRUSTED_ORIGINS = [f'https://{RENDER_EXTERNAL_HOSTNAME}'] if os.environ.get('RENDER_EXTERNAL_HOSTNAME') else ['https://*.onrender.com']
+# CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = []
+if IS_PRODUCTION:
+    csrf_env = os.environ.get('CSRF_TRUSTED_ORIGINS')
+    if csrf_env:
+        CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_env.split(',')]
+    elif os.environ.get('RENDER_EXTERNAL_HOSTNAME'):
+        CSRF_TRUSTED_ORIGINS = [f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}"]
 
 # Razorpay Configuration
 RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'your-razorpay-key-id')
