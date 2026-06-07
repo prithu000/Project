@@ -1,30 +1,153 @@
 {% extends "converter/base.html" %}
 {% load static %}
 
-{% block title %}Login — CamCap{% endblock %}
+{% block title %}Sign In — CamCap{% endblock %}
 
 {% block content %}
-<section class="auth-section">
-    <div class="auth-card" style="max-width: 450px;">
-        <div class="center">
-            <img src="{% static 'ChatGPT Image Jun 1, 2026, 10_31_22 PM.png' %}" alt="CamCap" style="width: 48px; border-radius: 12px; margin-bottom: 1rem;">
-            <h2 class="section-title">Welcome Back</h2>
-            <p class="auth-subtitle">Sign in with your Google account</p>
+<style>
+.auth-hero-bg {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,240,255,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 80% 80%, rgba(37,99,235,0.07) 0%, transparent 60%);
+}
+.auth-wrapper {
+    min-height: calc(100svh - 64px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem var(--page-px);
+}
+.auth-box {
+    width: 100%; max-width: 460px;
+    background: rgba(5,11,20,0.7);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem 2rem;
+    box-shadow: 0 0 0 1px rgba(0,240,255,0.05), 0 20px 60px rgba(0,0,0,0.6);
+    backdrop-filter: blur(20px); position: relative; overflow: hidden;
+}
+.auth-box::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background: linear-gradient(90deg, transparent 5%, var(--cyan) 50%, transparent 95%);
+    box-shadow: 0 0 12px var(--cyan);
+}
+.auth-box::after {
+    content:''; position:absolute; bottom:-60px; right:-60px;
+    width:200px; height:200px; border-radius:50%;
+    background: radial-gradient(circle, rgba(0,240,255,0.04) 0%, transparent 70%);
+    pointer-events:none;
+}
+.auth-logo { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:2rem; }
+.auth-logo img { width:44px; height:44px; border-radius:10px; border:1px solid var(--border); }
+.auth-logo-text { font-family:'Space Grotesk',sans-serif; font-size:1.6rem; font-weight:700; color:#fff; text-transform:uppercase; }
+.auth-logo-text span { color:var(--cyan); text-shadow:0 0 8px rgba(0,240,255,.5); }
+.auth-heading {
+    text-align:center; margin-bottom:2rem;
+}
+.auth-heading h1 {
+    font-family:'Space Grotesk',sans-serif; font-size:1.75rem; font-weight:700;
+    color:#fff; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;
+}
+.auth-heading p { color:var(--text-secondary); font-size:.9rem; }
+
+.google-btn {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    width: 100%; padding: 15px 24px;
+    background: #fff; color: #3c4043;
+    border: none; border-radius: 10px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem;
+    cursor: pointer; text-decoration: none;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.05);
+    position: relative; overflow: hidden;
+}
+.google-btn::before {
+    content:''; position:absolute; inset:0;
+    background:rgba(0,0,0,0); transition:background .2s;
+}
+.google-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.25); }
+.google-btn:hover::before { background:rgba(0,0,0,.03); }
+.google-btn:active { transform:translateY(0); box-shadow:0 2px 8px rgba(0,0,0,.15); }
+.google-btn svg { flex-shrink:0; }
+.google-btn-label { font-size:1rem; font-weight:600; letter-spacing:.2px; }
+
+.auth-divider {
+    display:flex; align-items:center; gap:14px; margin:1.75rem 0;
+    color:var(--text-muted); font-size:.8rem; font-family:'JetBrains Mono',monospace;
+}
+.auth-divider::before,.auth-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.auth-features {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 1.5rem;
+}
+.auth-feature {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px; border-radius: 8px;
+    background: rgba(0,240,255,.03); border: 1px solid rgba(0,240,255,.08);
+    font-size:.82rem; color:var(--text-secondary);
+}
+.auth-feature-icon { font-size:1.1rem; flex-shrink:0; }
+.auth-switch {
+    text-align:center; margin-top:1.75rem; padding-top:1.5rem;
+    border-top:1px dashed rgba(0,240,255,.1);
+    font-size:.88rem; color:var(--text-secondary);
+}
+.auth-switch a {
+    color:var(--cyan); font-weight:600; text-decoration:none;
+    border-bottom:1px dashed rgba(0,240,255,.5); padding-bottom:1px;
+    transition:color .2s;
+}
+.auth-switch a:hover { color:#fff; }
+
+@media(max-width:480px){
+    .auth-box { padding:2rem 1.25rem; border-radius:12px; }
+    .auth-heading h1 { font-size:1.4rem; }
+    .auth-features { grid-template-columns:1fr; }
+}
+</style>
+
+<div class="auth-hero-bg"></div>
+<div class="auth-wrapper">
+    <div class="auth-box">
+        <div class="auth-logo">
+            <img src="{% static 'ChatGPT Image Jun 1, 2026, 10_31_22 PM.png' %}" alt="CamCap">
+            <span class="auth-logo-text">Cam<span>Cap</span></span>
         </div>
-        
-        <a href="/accounts/google/login/?process=login" class="btn btn-google btn-lg w-100">
-            <svg width="20" height="20" viewBox="0 0 48 48">
+
+        <div class="auth-heading">
+            <h1>Welcome Back</h1>
+            <p>Sign in to manage your orders &amp; access your account</p>
+        </div>
+
+        <a href="/accounts/google/login/?process=login" class="google-btn" id="googleSignInBtn">
+            <svg width="22" height="22" viewBox="0 0 48 48">
                 <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                 <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
                 <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
                 <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
             </svg>
-            Sign in with Google
+            <span class="google-btn-label">Continue with Google</span>
         </a>
-        
-        <p class="auth-footer">
-            Don't have an account? <a href="{% url 'shop:signup' %}">Create one with Google</a>
-        </p>
+
+        <div class="auth-switch">
+            New to CamCap? <a href="{% url 'shop:signup' %}">Create an account →</a>
+        </div>
+
+        <div class="auth-features">
+            <div class="auth-feature">
+                <span class="auth-feature-icon">⚡</span>
+                <span>One-click login</span>
+            </div>
+            <div class="auth-feature">
+                <span class="auth-feature-icon">🔐</span>
+                <span>No passwords</span>
+            </div>
+            <div class="auth-feature">
+                <span class="auth-feature-icon">✅</span>
+                <span>Instant setup</span>
+            </div>
+            <div class="auth-feature">
+                <span class="auth-feature-icon">📦</span>
+                <span>Track orders</span>
+            </div>
+        </div>
     </div>
-</section>
+</div>
 {% endblock %}
