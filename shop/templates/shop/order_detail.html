@@ -1,0 +1,300 @@
+{% extends "converter/base.html" %}
+{% load static %}
+
+{% block title %}Order {{ order.order_id }} — CamCap{% endblock %}
+
+{% block content %}
+<section class="orders-section mt-4 reveal">
+    <div class="section-header center">
+        <span class="section-badge">📦 Order Tracking</span>
+        <h2 class="section-title">Order {{ order.order_id }}</h2>
+        <p class="text-secondary">Track your CamCap delivery</p>
+    </div>
+
+    <div class="order-tracking-container">
+        <!-- Order Status Timeline -->
+        <div class="tracking-card">
+            <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
+                <span>{{ order.status_icon }}</span>
+                <span>{{ order.get_status_display }}</span>
+            </h3>
+            
+            <div class="tracking-timeline">
+                {% for step in order.status_timeline %}
+                <div class="timeline-step {% if step.completed %}completed{% endif %} {% if step.active %}active{% endif %}">
+                    <div class="timeline-dot">
+                        <span class="timeline-icon">{{ step.icon }}</span>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-label">{{ step.label }}</div>
+                        {% if step.active %}
+                        <div class="timeline-time">Current Status</div>
+                        {% elif step.completed %}
+                        <div class="timeline-time">Completed</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Tracking Information -->
+        {% if order.tracking_number %}
+        <div class="tracking-info-card">
+            <h4 style="margin-bottom: 1rem;">Shipping Information</h4>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Tracking Number</span>
+                    <span class="info-value">{{ order.tracking_number }}</span>
+                </div>
+                {% if order.courier_name %}
+                <div class="info-item">
+                    <span class="info-label">Courier</span>
+                    <span class="info-value">{{ order.courier_name }}</span>
+                </div>
+                {% endif %}
+                {% if order.estimated_delivery %}
+                <div class="info-item">
+                    <span class="info-label">Estimated Delivery</span>
+                    <span class="info-value">{{ order.estimated_delivery|date:"d M, Y" }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Order Details -->
+        <div class="order-details-card">
+            <h4 style="margin-bottom: 1rem;">Order Details</h4>
+            
+            <div class="order-product">
+                <div style="width: 60px; height: 60px; background: rgba(37,99,235,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--blue);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                </div>
+                <div style="flex: 1;">
+                    <h4>{{ order.product.name }}</h4>
+                    <p class="text-secondary">Quantity: {{ order.quantity }}</p>
+                </div>
+                <div>
+                    <div class="text-blue" style="font-size: 1.2rem; font-weight: 700;">₹{{ order.total_price }}</div>
+                </div>
+            </div>
+
+            <div class="order-info-grid">
+                <div>
+                    <div class="info-label">Order Date</div>
+                    <div class="info-value">{{ order.created_at|date:"d M, Y" }}</div>
+                </div>
+                <div>
+                    <div class="info-label">Payment Method</div>
+                    <div class="info-value">{{ order.get_payment_method_display|default:"COD" }}</div>
+                </div>
+                <div>
+                    <div class="info-label">Payment Status</div>
+                    <div class="info-value">
+                        <span class="status-badge status-{{ order.payment_status }}">
+                            {{ order.get_payment_status_display }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                <div class="info-label" style="margin-bottom: 0.5rem;">Shipping Address</div>
+                <div class="info-value">
+                    {{ order.full_name }}<br>
+                    {{ order.address }}<br>
+                    {{ order.city }}, {{ order.state}} - {{ order.pincode }}<br>
+                    Phone: {{ order.phone }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="order-actions">
+            <a href="{% url 'shop:orders' %}" class="btn btn-ghost btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Orders
+            </a>
+            {% if order.status != 'delivered' and order.status != 'cancelled' %}
+            <a href="/" class="btn btn-primary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                Continue Shopping
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+.order-tracking-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.tracking-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.tracking-timeline {
+    position: relative;
+}
+
+.tracking-timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+}
+
+.timeline-step {
+    position: relative;
+    padding-left: 60px;
+    padding-bottom: 2rem;
+}
+
+.timeline-step:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.timeline-step.completed .timeline-dot {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.timeline-step.active .timeline-dot {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px var(--cyan-glow);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px var(--cyan-glow);
+    }
+    50% {
+        box-shadow: 0 0 30px var(--cyan-glow), 0 0 40px var(--cyan-glow);
+    }
+}
+
+.timeline-icon {
+    font-size: 1.2rem;
+}
+
+.timeline-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+}
+
+.timeline-time {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.timeline-step.active .timeline-label {
+    color: var(--cyan);
+}
+
+.tracking-info-card, .order-details-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.order-product {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+}
+
+.order-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.order-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+    .tracking-card {
+        padding: 1.5rem;
+    }
+    
+    .order-tracking-container {
+        padding: 1rem 0.5rem;
+    }
+    
+    .order-actions {
+        flex-direction: column;
+    }
+    
+    .order-actions .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

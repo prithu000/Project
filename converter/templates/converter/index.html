@@ -1,7 +1,7 @@
 {% extends "converter/base.html" %}
 {% load static %}
 
-{% block title %}CamCap — Home{% endblock %}
+{% block title %}CamCap — Capture Every Moment Hands-Free{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -10,74 +10,223 @@
         <source src="{% static 'WhatsApp Video 2026-06-01 at 9.58.43 PM.mp4' %}" type="video/mp4">
     </video>
     <div class="hero-overlay"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
     <div class="hero-content">
-        <h1 class="hero-title">Wear Your Perspective</h1>
-        <p class="hero-subtitle">CamCap goes where your stories take you. Hands-free convenience, lightweight comfort, and endless perspectives.</p>
+        <div class="hero-tagline">🎥 Premium Wearable Camera</div>
+        <h1 class="hero-title">Capture Every Moment<br><span class="hero-title-accent">Hands-Free.</span></h1>
+        <p class="hero-subtitle">CamCap goes where your stories take you. HD recording, lightweight comfort, and endless perspectives — all in a premium wearable cap.</p>
         <div class="hero-actions">
-            <a href="{% url 'shop:product' %}" class="btn btn-primary btn-lg">Order CamCap</a>
-            <a href="{% url 'converter:convert' %}" class="btn btn-ghost btn-lg">Get Your Videos</a>
+            <a href="{% url 'shop:product' %}" class="btn btn-primary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Order CamCap — ₹5,999
+            </a>
+            <a href="{% url 'converter:convert' %}" class="btn btn-white btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                Convert Videos
+            </a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-number">1080p</div>
+                <div class="hero-stat-label">HD Recording</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">8+ hrs</div>
+                <div class="hero-stat-label">Battery Life</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">128GB</div>
+                <div class="hero-stat-label">SD Card Support</div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Features / Showcase -->
-<section class="showcase-section">
+<!-- Features Section -->
+<section class="features-section" id="features">
     <div class="section-header center">
+        <span class="section-badge">✨ Why CamCap</span>
+        <h2 class="section-title">Built for Every Moment</h2>
+        <p class="section-desc">10 powerful features packed into one premium wearable cap. No hands needed, just wear and go.</p>
+    </div>
+    
+    <div class="features-grid">
+        <div class="feature-card reveal">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <h3>HD Video Recording</h3>
+            <p>Crystal clear 1080p Full HD video recording captures every detail of your world.</p>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-1">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <h3>Hands-Free Capture</h3>
+            <p>No need to hold a camera. Just wear CamCap and live your life while it records.</p>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-2">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3>POV Recording</h3>
+            <p>First-person perspective recording — perfect for vlogs, travel, and real-life POV content.</p>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-3">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </div>
+            <h3>Hidden Camera Design</h3>
+            <p>Sleek, unnoticeable camera lens blends perfectly with the cap's premium design.</p>
+        </div>
+
+        <div class="feature-card reveal">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <h3>Lightweight & Comfortable</h3>
+            <p>Premium fabric, breathable design, and ultra-lightweight build for all-day comfort.</p>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-1">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="13" x2="23" y2="11"/></svg>
+            </div>
+            <h3>Long Battery Life</h3>
+            <p>8+ hours of continuous recording on a single charge — enough for a full day out.</p>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-2">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3>One-Touch Operation</h3>
+            <p>Single button press to start/stop recording. No complex menus or settings.</p>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-3">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <h3>Travel & Adventure Ready</h3>
+            <p>Water-resistant, shock-proof, and built to handle outdoor adventures.</p>
+        </div>
+
+        <div class="feature-card reveal">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3>Content Creator Friendly</h3>
+            <p>Perfect for YouTubers, vloggers, and social media creators looking for unique POV content.</p>
+        </div>
+
+        <div class="feature-card reveal reveal-delay-1">
+            <div class="feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3>Premium Wearable Design</h3>
+            <p>Stylish cap design that looks great anywhere — from the streets to the trails.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Showcase Gallery -->
+<section class="showcase-section" id="showcase">
+    <div class="section-header center">
+        <span class="section-badge">📸 Gallery</span>
         <h2 class="section-title">One Cap. Endless Stories.</h2>
-        <p class="section-desc">Capture life naturally without holding a camera.</p>
+        <p class="section-desc">Capture life naturally without holding a camera. See CamCap in action.</p>
     </div>
     
     <div class="showcase-grid">
-        <div class="showcase-card">
-            <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.42 PM.jpeg' %}" alt="POV Ready" class="showcase-img">
+        <div class="showcase-card reveal">
+            <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.42 PM.jpeg' %}" alt="CamCap POV Ready" class="showcase-img" loading="lazy">
             <div class="showcase-info">
                 <h3>POV Ready</h3>
-                <p>Perfect for travel, vlogging, and capturing authentic moments.</p>
+                <p>Perfect for travel, vlogging, and capturing authentic moments from your perspective.</p>
             </div>
         </div>
-        <div class="showcase-card">
-            <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM.jpeg' %}" alt="Journey" class="showcase-img">
+        <div class="showcase-card reveal reveal-delay-1">
+            <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM.jpeg' %}" alt="CamCap Journey" class="showcase-img" loading="lazy">
             <div class="showcase-info">
                 <h3>Journeys That Shape Your View</h3>
-                <p>Designed for comfort and durability on the go.</p>
+                <p>Designed for comfort and durability — take it anywhere, from city walks to mountain trails.</p>
             </div>
         </div>
-        <div class="showcase-card">
-            <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM (1).jpeg' %}" alt="Wear Your Perspective" class="showcase-img">
+        <div class="showcase-card reveal reveal-delay-2">
+            <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM (1).jpeg' %}" alt="CamCap Creator Essential" class="showcase-img" loading="lazy">
             <div class="showcase-info">
                 <h3>Creator Essential</h3>
-                <p>Secure fit, lightweight fabric, and effortless recording.</p>
+                <p>Secure fit, lightweight fabric, and effortless recording — the ultimate content tool.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- How It Works (Converter) -->
-<section class="how-it-works">
+<!-- Video Demo Section -->
+<section class="video-section reveal">
     <div class="section-header center">
+        <span class="section-badge">🎬 See It In Action</span>
+        <h2 class="section-title">Watch CamCap Live</h2>
+        <p class="section-desc">Real footage, real moments. See the quality for yourself.</p>
+    </div>
+    <div class="video-wrapper">
+        <video controls poster="{% static 'WhatsApp Image 2026-06-01 at 9.58.42 PM.jpeg' %}" preload="metadata">
+            <source src="{% static 'Create_a_second_viral_social.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works reveal">
+    <div class="section-header center">
+        <span class="section-badge">⚡ How It Works</span>
         <h2 class="section-title">Easily Manage Your Footage</h2>
-        <p class="section-desc">Convert your .build SD card files to MP4 in seconds.</p>
+        <p class="section-desc">Convert your .build SD card files to MP4 in seconds. No software needed.</p>
     </div>
     
     <div class="steps-grid">
-        <div class="step-card">
+        <div class="step-card reveal">
             <div class="step-icon">1</div>
             <h3>Connect SD Card</h3>
             <p>Use an OTG cable to connect your CamCap SD card to your phone or PC.</p>
         </div>
-        <div class="step-card">
+        <div class="step-card reveal reveal-delay-1">
             <div class="step-icon">2</div>
             <h3>Select Folder</h3>
             <p>Browse your device folders using our secure File Manager and select your .build files.</p>
         </div>
-        <div class="step-card">
+        <div class="step-card reveal reveal-delay-2">
             <div class="step-icon">3</div>
             <h3>Convert & Download</h3>
-            <p>We'll merge and convert them into a single MP4 video ready to share.</p>
+            <p>We'll merge and convert them into a single MP4 video ready to share anywhere.</p>
         </div>
     </div>
-    <div class="center" style="margin-top: 2rem;">
-        <a href="{% url 'converter:convert' %}" class="btn btn-primary btn-lg">Open File Manager</a>
+    <div class="center" style="margin-top: 2.5rem;">
+        <a href="{% url 'converter:convert' %}" class="btn btn-primary btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            Open File Manager
+        </a>
+    </div>
+</section>
+
+<!-- CTA Banner -->
+<section class="cta-banner reveal">
+    <h2>Ready to Capture Your Story?</h2>
+    <p>Join thousands of creators and adventurers using CamCap to capture life hands-free.</p>
+    <div class="hero-actions">
+        <a href="{% url 'shop:product' %}" class="btn btn-primary btn-lg">
+            Order CamCap Now — ₹5,999
+        </a>
+        <a href="{% url 'converter:convert' %}" class="btn btn-white btn-lg">
+            Try the Converter
+        </a>
     </div>
 </section>
 {% endblock %}

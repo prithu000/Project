@@ -3,28 +3,82 @@
 {% block title %}Order Success — CamCap{% endblock %}
 
 {% block content %}
-<section class="mt-4 center">
-    <div class="card p-5 mx-auto" style="max-width: 600px;">
-        <div class="text-green mb-3">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<section class="success-section">
+    <!-- Confetti container will be animated by JS -->
+    <div class="confetti-container" id="confettiContainer"></div>
+    
+    <div class="success-card">
+        <div class="success-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                 <polyline points="22 4 12 14.01 9 11.01"/>
             </svg>
         </div>
-        <h1 class="mb-3">Order Confirmed!</h1>
-        <p class="text-secondary mb-4">Thank you for your purchase. Your order has been placed successfully.</p>
         
-        <div class="order-details text-left p-3 mb-4" style="background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--border);">
-            <p><strong>Order ID:</strong> {{ order.order_id }}</p>
-            <p><strong>Amount:</strong> ₹{{ order.total_price }} (Cash on Delivery)</p>
-            <p><strong>Shipping to:</strong> {{ order.full_name }}, {{ order.city }}</p>
-            <p><strong>Status:</strong> <span class="badge text-orange">{{ order.get_status_display }}</span></p>
+        <h1 class="mb-2" style="font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; color: var(--text-primary);">Order Confirmed!</h1>
+        <p class="text-secondary mb-4">Thank you for your purchase. We're getting your CamCap ready for adventure.</p>
+        
+        <div class="success-details">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed var(--border);">
+                <span class="text-secondary">Order ID</span>
+                <strong style="font-family: 'Space Grotesk', sans-serif;">{{ order.order_id }}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed var(--border);">
+                <span class="text-secondary">Amount</span>
+                <strong class="text-blue">₹{{ order.total_price }} (COD)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed var(--border);">
+                <span class="text-secondary">Shipping to</span>
+                <strong style="text-align: right; max-width: 60%;">{{ order.full_name }}<br><span style="font-weight: normal; font-size: 0.9rem;">{{ order.city }}</span></strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="text-secondary">Status</span>
+                <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+            </div>
         </div>
         
-        <div class="d-flex center" style="gap: 16px;">
-            <a href="{% url 'shop:orders' %}" class="btn btn-ghost">View My Orders</a>
-            <a href="/" class="btn btn-primary">Return Home</a>
+        <div class="d-flex center" style="gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+            <a href="{% url 'shop:orders' %}" class="btn btn-ghost btn-lg" style="min-width: 180px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                Track Order
+            </a>
+            <a href="/" class="btn btn-primary btn-lg" style="min-width: 180px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Return Home
+            </a>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Fire confetti on load
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('confettiContainer');
+        if (!container) return;
+        
+        const colors = ['#2563eb', '#06b6d4', '#10b981', '#f59e0b', '#8b5cf6'];
+        
+        for (let i = 0; i < 60; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 1.5 + 's';
+            // Custom property for horizontal drift
+            confetti.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+            
+            // Random shapes
+            if (Math.random() > 0.5) confetti.style.borderRadius = '50%';
+            
+            container.appendChild(confetti);
+        }
+        
+        // Clean up after animation finishes
+        setTimeout(() => {
+            container.innerHTML = '';
+        }, 5000);
+    });
+</script>
 {% endblock %}

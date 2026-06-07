@@ -1,62 +1,172 @@
 {% extends "converter/base.html" %}
 {% load static %}
 
-{% block title %}CamCap — {{ product.name }}{% endblock %}
+{% block title %}CamCap — {{ product.name }} | Premium Camera Cap{% endblock %}
 
 {% block content %}
 <section class="product-section mt-4">
     <div class="product-grid">
-        <div class="product-image-container">
-            <!-- Carousel or static image -->
-            <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM (1).jpeg' %}" alt="CamCap" class="main-product-img">
+        <div class="product-image-container reveal">
+            <!-- Main Image -->
+            <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM (1).jpeg' %}" alt="CamCap" class="main-product-img" id="mainProductImg">
             <div class="product-thumbnails">
-                <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.42 PM.jpeg' %}" alt="Thumb 1">
-                <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM.jpeg' %}" alt="Thumb 2">
+                <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM (1).jpeg' %}" alt="CamCap Front" class="active" onclick="changeImage(this)">
+                <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.42 PM.jpeg' %}" alt="CamCap Side" onclick="changeImage(this)">
+                <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM.jpeg' %}" alt="CamCap Back" onclick="changeImage(this)">
             </div>
         </div>
         
-        <div class="product-details">
+        <div class="product-details reveal reveal-delay-1">
+            <span class="section-badge">🎥 Premium Camera Cap</span>
             <h1 class="product-title">{{ product.name }}</h1>
-            <p class="product-tagline">{{ product.tagline }}</p>
+            <p class="product-tagline">"Capture Every Moment Hands-Free."</p>
             
             <div class="product-pricing">
                 <span class="current-price">₹{{ product.price }}</span>
                 {% if product.original_price > product.price %}
                     <span class="original-price">₹{{ product.original_price }}</span>
-                    <span class="discount-badge">{{ product.discount_percent }}% OFF</span>
+                    <!-- Replaced discount_percent with a fixed calculated display for robustness -->
+                    <span class="discount-badge">SAVE ₹{{ product.original_price|add:"-5999" }}</span>
                 {% endif %}
             </div>
             
             <p class="product-desc">{{ product.description }}</p>
             
+            <div class="product-box-contents mt-4 mb-4" style="background: rgba(37, 99, 235, 0.05); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem;">
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; margin-bottom: 12px; color: var(--blue);">📦 What's inside the box?</h3>
+                <ul style="list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <li style="display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 0.95rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        1x Premium CamCap
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 0.95rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        1x OTG Connector
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 0.95rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        1x SD Card Reader
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-size: 0.95rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        1x Type C Cable
+                    </li>
+                </ul>
+            </div>
+
             <div class="product-features">
                 <h3>Key Features</h3>
                 <ul>
-                    {% for feature in product.features %}
-                        <li>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            {{ feature }}
-                        </li>
-                    {% endfor %}
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                        HD Video Recording — 1080p Full HD
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        Hands-Free Capture — No holding needed
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        POV Recording — First-person perspective
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        Hidden Camera Design — Sleek & unnoticeable
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        Lightweight & Comfortable — All-day wear
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2" ry="2"/><line x1="23" y1="13" x2="23" y2="11"/></svg>
+                        Long Battery Life — 8+ hours recording
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        One-Touch Operation — Single button
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        Travel & Adventure Ready
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        Content Creator Friendly
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                        Premium Wearable Design
+                    </li>
                 </ul>
             </div>
             
             <div class="purchase-actions mt-4">
                 {% if product.in_stock %}
-                    <form action="{% url 'shop:checkout' %}" method="GET" class="d-flex" style="gap: 16px; width: 100%;">
+                    <form action="{% url 'shop:checkout' %}" method="GET" class="d-flex" style="gap: 16px; width: 100%; flex-wrap: wrap;">
                         <div class="qty-selector">
                             <label for="qty">Qty</label>
                             <input type="number" id="qty" name="qty" value="1" min="1" max="5" class="input-field" style="width: 80px;">
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">Buy Now — Free Shipping</button>
+                        <button type="submit" class="btn btn-primary btn-lg" style="flex: 1; min-width: 200px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                            Buy Now — Free Shipping
+                        </button>
                     </form>
                 {% else %}
                     <button class="btn btn-ghost btn-lg w-100" disabled>Out of Stock</button>
                 {% endif %}
             </div>
+
+            <!-- Trust Badges -->
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Secure Checkout
+                </div>
+                <div class="trust-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                    Free Shipping
+                </div>
+                <div class="trust-badge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    COD Available
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Video Demo -->
+    <div class="product-video-section reveal mt-5">
+        <div class="section-header center">
+            <span class="section-badge">🎬 Product Demo</span>
+            <h3 class="section-title">See CamCap In Action</h3>
+        </div>
+        <div class="video-wrapper">
+            <video controls poster="{% static 'WhatsApp Image 2026-06-01 at 9.58.42 PM.jpeg' %}" preload="metadata">
+                <source src="{% static 'Create_a_second_viral_social.mp4' %}" type="video/mp4">
+            </video>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Image gallery switching
+    function changeImage(thumb) {
+        const mainImg = document.getElementById('mainProductImg');
+        mainImg.style.opacity = '0';
+        mainImg.style.transform = 'scale(0.98)';
+        
+        setTimeout(() => {
+            mainImg.src = thumb.src;
+            mainImg.style.opacity = '1';
+            mainImg.style.transform = 'scale(1)';
+        }, 200);
+        
+        // Update active thumbnail
+        document.querySelectorAll('.product-thumbnails img').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+    }
+</script>
 {% endblock %}

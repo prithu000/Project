@@ -3,3 +3,6 @@ psutil>=5.9
 gunicorn>=21.2
 whitenoise>=6.5
 dj-database-url>=2.1
+django-allauth>=0.57.0
+razorpay>=2.0.0
+python-dotenv>=1.0.0

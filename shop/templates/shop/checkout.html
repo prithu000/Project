@@ -1,85 +1,309 @@
 {% extends "converter/base.html" %}
+{% load static %}
 
 {% block title %}Checkout — CamCap{% endblock %}
 
 {% block content %}
-<section class="checkout-section mt-4">
+<section class="checkout-section mt-4 reveal">
     <div class="section-header center">
-        <h2 class="section-title">Checkout</h2>
+        <span class="section-badge">🛍️ Secure Checkout</span>
+        <h2 class="section-title">Complete Your Order</h2>
     </div>
 
     <div class="checkout-grid">
-        <div class="checkout-form-container card p-4">
+        <div class="checkout-form-container card p-5">
             <h3>Shipping Details</h3>
+            <p class="text-sm text-secondary mb-4">Please enter your details to complete your purchase.</p>
+            
             <form action="{% url 'shop:place_order' %}" method="POST" id="checkoutForm">
                 {% csrf_token %}
                 <input type="hidden" name="quantity" value="{{ quantity }}">
                 
-                <div class="form-group mt-3">
-                    <label>Full Name</label>
-                    <input type="text" name="full_name" class="input-field w-100" required>
+                <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" class="input-field w-100" placeholder="e.g. John Doe" required>
                 </div>
                 
-                <div class="form-group mt-3">
-                    <label>Phone Number</label>
-                    <input type="tel" name="phone" class="input-field w-100" required>
-                </div>
-                
-                <div class="form-group mt-3">
-                    <label>Email (Optional)</label>
-                    <input type="email" name="email" class="input-field w-100" value="{{ user.email }}">
-                </div>
-                
-                <div class="form-group mt-3">
-                    <label>Address</label>
-                    <textarea name="address" class="input-field w-100" rows="3" required></textarea>
-                </div>
-                
-                <div class="form-row mt-3" style="display: flex; gap: 16px;">
+                <div class="form-row d-flex" style="gap: 16px;">
                     <div class="form-group" style="flex: 1;">
-                        <label>City</label>
-                        <input type="text" name="city" class="input-field w-100" required>
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="input-field w-100" placeholder="+91 XXXXX XXXXX" required>
                     </div>
                     <div class="form-group" style="flex: 1;">
-                        <label>State</label>
-                        <input type="text" name="state" class="input-field w-100" required>
+                        <label for="email">Email (Optional)</label>
+                        <input type="email" id="email" name="email" class="input-field w-100" value="{{ user.email }}" placeholder="you@example.com">
                     </div>
                 </div>
                 
-                <div class="form-group mt-3">
-                    <label>Pincode</label>
-                    <input type="text" name="pincode" class="input-field w-100" required>
+                <div class="form-group mt-2">
+                    <label for="address">Full Address</label>
+                    <textarea id="address" name="address" class="input-field w-100" rows="3" placeholder="House/Flat No., Street, Landmark" required></textarea>
+                </div>
+                
+                <div class="form-row d-flex" style="gap: 16px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" class="input-field w-100" placeholder="e.g. Mumbai" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" class="input-field w-100" placeholder="e.g. Maharashtra" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="pincode">Pincode</label>
+                        <input type="text" id="pincode" name="pincode" class="input-field w-100" placeholder="e.g. 400001" required>
+                    </div>
                 </div>
 
-                <div class="form-group mt-4">
+                <div class="form-group mt-4 pt-3" style="border-top: 1px solid var(--border);">
                     <h3>Payment Method</h3>
-                    <div class="payment-option mt-2">
-                        <label class="d-flex" style="align-items: center; gap: 8px;">
-                            <input type="radio" name="payment" value="cod" checked>
-                            <span>Cash on Delivery (COD)</span>
+                    
+                    <!-- Razorpay Online Payment -->
+                    <div class="payment-option mt-3 p-3" style="border: 1.5px solid var(--blue); border-radius: var(--radius); background: rgba(37,99,235,0.04);">
+                        <label class="d-flex" style="align-items: center; gap: 12px; cursor: pointer;">
+                            <input type="radio" name="payment" value="online" id="payment_online" checked style="width: 18px; height: 18px; accent-color: var(--blue);">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: var(--text-primary);">Online Payment (Razorpay)</div>
+                                <div class="text-sm text-secondary">Pay securely with Card/UPI/NetBanking</div>
+                            </div>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                        </label>
+                    </div>
+                    
+                    <!-- Cash on Delivery -->
+                    <div class="payment-option mt-3 p-3" style="border: 1.5px solid var(--border); border-radius: var(--radius); background: rgba(0,0,0,0.02);">
+                        <label class="d-flex" style="align-items: center; gap: 12px; cursor: pointer;">
+                            <input type="radio" name="payment" value="cod" id="payment_cod" style="width: 18px; height: 18px; accent-color: var(--blue);">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: var(--text-primary);">Cash on Delivery (COD)</div>
+                                <div class="text-sm text-secondary">Pay when your order arrives</div>
+                            </div>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M17 12h.01"/><path d="M7 12h.01"/></svg>
                         </label>
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">Place Order</button>
+                <button type="button" id="checkoutBtn" class="btn btn-primary btn-lg w-100 mt-4">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <span id="checkoutBtnText">Pay ₹{{ total }}</span>
+                </button>
             </form>
         </div>
         
         <div class="order-summary card p-4">
-            <h3>Order Summary</h3>
+            <h3 style="display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Order Summary
+            </h3>
+            
+            <div class="mt-4" style="display: flex; gap: 12px; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+                <div style="width: 60px; height: 60px; background: rgba(37,99,235,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--blue);">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                </div>
+                <div style="flex: 1;">
+                    <h4 style="font-size: 1rem; margin-bottom: 2px;">{{ product.name }}</h4>
+                    <div class="text-sm text-secondary">Qty: {{ quantity }}</div>
+                </div>
+            </div>
+            
             <div class="summary-item mt-3">
-                <span class="text-secondary">{{ product.name }} x {{ quantity }}</span>
+                <span class="text-secondary">Subtotal</span>
                 <span>₹{{ total }}</span>
             </div>
             <div class="summary-item mt-2">
                 <span class="text-secondary">Shipping</span>
-                <span class="text-green">Free</span>
+                <span class="text-green font-weight-bold">Free</span>
             </div>
-            <div class="summary-total mt-3 pt-3" style="border-top: 1px solid var(--border);">
+            
+            <div class="summary-total">
                 <strong>Total Amount</strong>
-                <strong class="text-orange">₹{{ total }}</strong>
+                <strong class="text-blue" style="font-size: 1.4rem;">₹{{ total }}</strong>
+            </div>
+            
+            <div class="mt-4 pt-3 text-center text-sm text-secondary" style="border-top: 1px solid var(--border);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Safe & Secure Checkout
             </div>
         </div>
     </div>
 </section>
+
+<!-- Hidden form fields for Razorpay payment -->
+<form action="{% url 'shop:place_order' %}" method="POST" id="razorpayForm" style="display: none;">
+    {% csrf_token %}
+    <input type="hidden" name="quantity" id="razorpay_quantity">
+    <input type="hidden" name="full_name" id="razorpay_full_name">
+    <input type="hidden" name="phone" id="razorpay_phone">
+    <input type="hidden" name="email" id="razorpay_email">
+    <input type="hidden" name="address" id="razorpay_address">
+    <input type="hidden" name="city" id="razorpay_city">
+    <input type="hidden" name="state" id="razorpay_state">
+    <input type="hidden" name="pincode" id="razorpay_pincode">
+    <input type="hidden" name="payment" value="online" id="razorpay_payment">
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+</form>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const checkoutForm = document.getElementById('checkoutForm');
+    const paymentOnline = document.getElementById('payment_online');
+    const paymentCod = document.getElementById('payment_cod');
+    const btnText = document.getElementById('checkoutBtnText');
+    
+    // Update button text based on payment method
+    document.querySelectorAll('input[name="payment"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'online') {
+                btnText.textContent = 'Pay ₹{{ total }}';
+            } else {
+                btnText.textContent = 'Confirm Order';
+            }
+        });
+    });
+    
+    checkoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        if (!checkoutForm.checkValidity()) {
+            checkoutForm.reportValidity();
+            return;
+        }
+        
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        
+        if (paymentMethod === 'online') {
+            // Razorpay payment
+            initiateRazorpayPayment();
+        } else {
+            // COD - Submit form directly
+            checkoutForm.submit();
+        }
+    });
+    
+    function initiateRazorpayPayment() {
+        const amount = {{ total }} * 100; // Convert to paise
+        
+        // Show loading
+        checkoutBtn.disabled = true;
+        btnText.textContent = 'Processing...';
+        
+        // Create Razorpay order
+        fetch('{% url "shop:create_razorpay_order" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ amount: amount })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                throw new Error(data.message || 'Failed to create order');
+            }
+            
+            // Open Razorpay checkout
+            const options = {
+                key: data.key_id,
+                amount: data.amount,
+                currency: data.currency,
+                order_id: data.order_id,
+                name: 'CamCap',
+                description: '{{ product.name }} - Premium Wearable Camera Cap',
+                image: '{% static "ChatGPT Image Jun 1, 2026, 10_31_22 PM.png" %}',
+                prefill: {
+                    name: document.getElementById('full_name').value,
+                    email: document.getElementById('email').value || '',
+                    contact: document.getElementById('phone').value
+                },
+                theme: {
+                    color: '#2563eb'
+                },
+                handler: function(response) {
+                    // Payment successful
+                    verifyPayment(response);
+                },
+                modal: {
+                    ondismiss: function() {
+                        // User cancelled payment
+                        checkoutBtn.disabled = false;
+                        btnText.textContent = 'Pay ₹{{ total }}';
+                    }
+                }
+            };
+            
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function(response) {
+                alert('Payment failed: ' + response.error.description);
+                checkoutBtn.disabled = false;
+                btnText.textContent = 'Pay ₹{{ total }}';
+            });
+            
+            rzp.open();
+            checkoutBtn.disabled = false;
+            btnText.textContent = 'Pay ₹{{ total }}';
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+            checkoutBtn.disabled = false;
+            btnText.textContent = 'Pay ₹{{ total }}';
+        });
+    }
+    
+    function verifyPayment(razorpayResponse) {
+        checkoutBtn.disabled = true;
+        btnText.textContent = 'Verifying payment...';
+        
+        // Verify payment signature
+        fetch('{% url "shop:verify_razorpay_payment" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+                razorpay_order_id: razorpayResponse.razorpay_order_id,
+                razorpay_signature: razorpayResponse.razorpay_signature
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Payment verified - Submit order
+                const form = document.getElementById('razorpayForm');
+                document.getElementById('razorpay_quantity').value = '{{ quantity }}';
+                document.getElementById('razorpay_full_name').value = document.getElementById('full_name').value;
+                document.getElementById('razorpay_phone').value = document.getElementById('phone').value;
+                document.getElementById('razorpay_email').value = document.getElementById('email').value;
+                document.getElementById('razorpay_address').value = document.getElementById('address').value;
+                document.getElementById('razorpay_city').value = document.getElementById('city').value;
+                document.getElementById('razorpay_state').value = document.getElementById('state').value;
+                document.getElementById('razorpay_pincode').value = document.getElementById('pincode').value;
+                document.getElementById('razorpay_payment_id').value = razorpayResponse.razorpay_payment_id;
+                document.getElementById('razorpay_order_id').value = razorpayResponse.razorpay_order_id;
+                document.getElementById('razorpay_signature').value = razorpayResponse.razorpay_signature;
+                
+                form.submit();
+            } else {
+                throw new Error(data.message || 'Payment verification failed');
+            }
+        })
+        .catch(error => {
+            alert('Verification failed: ' + error.message);
+            checkoutBtn.disabled = false;
+            btnText.textContent = 'Pay ₹{{ total }}';
+        });
+    }
+});
+</script>
 {% endblock %}
