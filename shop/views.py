@@ -29,10 +29,10 @@ def product_page(request):
         # Create default product if none exists
         product = Product.objects.create(
             name='CamCap',
-            tagline='Capture. Vlog. Share.',
-            description='CamCap is more than just a cap. It\'s your point of view, your creative edge, your everyday companion. Perfect for vlogging, travel, and hands-free recording.',
-            price=2999.00,
-            original_price=4999.00,
+            tagline='Premium Wearable Camera Cap',
+            description='Capture your journey hands-free with the premium CamCap. Features HD recording, long battery life, and comfortable wear.',
+            price=5999.00,
+            original_price=7999.00,
             in_stock=True,
             features=[
                 'POV Ready — Built-in camera mount',
@@ -43,6 +43,11 @@ def product_page(request):
                 'Perfect for Travel & Vlogging',
             ]
         )
+    elif product.price != 5999.00:
+        product.price = 5999.00
+        product.original_price = 7999.00
+        product.save()
+        
     return render(request, 'shop/product.html', {'product': product})
 
 
