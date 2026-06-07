@@ -4,6 +4,57 @@
 {% block title %}CamCap — {{ product.name }} | Premium Camera Cap{% endblock %}
 
 {% block content %}
+<style>
+/* Make thumbnails slideable horizontally */
+.product-thumbnails {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 8px; /* Room for scrollbar */
+    scroll-snap-type: x mandatory;
+    flex-wrap: nowrap !important; /* Override style.css */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--cyan) rgba(0,0,0,0.3);
+}
+.product-thumbnails::-webkit-scrollbar { height: 6px; }
+.product-thumbnails::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 10px; }
+.product-thumbnails::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 10px; }
+.product-thumbnails img {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+}
+
+/* Sticky Buy Button on Mobile */
+@media (max-width: 768px) {
+    .purchase-actions {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1rem var(--page-px);
+        background: rgba(5,11,20, 0.95);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid var(--cyan);
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(0,240,255,0.2);
+        z-index: 1000;
+        margin: 0 !important;
+        transform: translateY(0);
+        transition: transform 0.3s;
+    }
+    .purchase-actions form {
+        margin: 0;
+    }
+    body {
+        padding-bottom: 90px; /* Prevent content from being hidden */
+    }
+    .trust-badges {
+        margin-bottom: 80px; /* Extra space so users can scroll past everything */
+    }
+}
+</style>
 <section class="product-section mt-4">
     <div class="product-grid">
         <div class="product-image-container reveal">
@@ -13,6 +64,8 @@
                 <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM (1).jpeg' %}" alt="CamCap Front" class="active" onclick="changeImage(this)">
                 <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.42 PM.jpeg' %}" alt="CamCap Side" onclick="changeImage(this)">
                 <img src="{% static 'WhatsApp Image 2026-06-01 at 9.58.41 PM.jpeg' %}" alt="CamCap Back" onclick="changeImage(this)">
+                <img src="{% static 'WhatsApp Image 2026-06-07 at 4.55.07 PM (1).jpeg' %}" alt="CamCap Details" onclick="changeImage(this)">
+                <img src="{% static 'WhatsApp Image 2026-06-07 at 4.55.07 PM.jpeg' %}" alt="CamCap Wearable" onclick="changeImage(this)">
             </div>
         </div>
         
