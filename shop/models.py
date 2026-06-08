@@ -48,7 +48,7 @@ class Order(models.Model):
     # Shipping details
     full_name = models.CharField(max_length=200)
     phone = models.CharField(max_length=15)
-    email = models.EmailField(blank=True)
+    email = models.EmailField()  # Email is now mandatory
     address = models.TextField()
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)

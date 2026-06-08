@@ -291,6 +291,16 @@ body {
     box-shadow: inset 0 0 10px rgba(0,240,255,.1), 0 0 15px rgba(0,240,255,.2);
 }
 .input-field::placeholder { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: .85rem; }
+.input-field[readonly] {
+    background: rgba(0,0,0,.3);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    border-color: rgba(0,240,255,.15);
+}
+.input-field[readonly]:focus {
+    box-shadow: none;
+    border-color: rgba(0,240,255,.15);
+}
 textarea.input-field { resize: vertical; min-height: 100px; }
 .form-row { display: flex; gap: 14px; }
 

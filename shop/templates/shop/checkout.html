@@ -30,8 +30,8 @@
                         <input type="tel" id="phone" name="phone" class="input-field w-100" placeholder="+91 XXXXX XXXXX" required>
                     </div>
                     <div class="form-group" style="flex: 1;">
-                        <label for="email">Email (Optional)</label>
-                        <input type="email" id="email" name="email" class="input-field w-100" value="{{ user.email }}" placeholder="you@example.com">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="input-field w-100" value="{{ user.email }}" placeholder="you@example.com" required>
                     </div>
                 </div>
                 
@@ -42,16 +42,17 @@
                 
                 <div class="form-row d-flex" style="gap: 16px;">
                     <div class="form-group" style="flex: 1;">
+                        <label for="pincode">Pincode</label>
+                        <input type="text" id="pincode" name="pincode" class="input-field w-100" placeholder="e.g. 400001" maxlength="6" pattern="[0-9]{6}" required>
+                        <small id="pincode-status" class="text-sm" style="display: block; margin-top: 4px;"></small>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
                         <label for="city">City</label>
-                        <input type="text" id="city" name="city" class="input-field w-100" placeholder="e.g. Mumbai" required>
+                        <input type="text" id="city" name="city" class="input-field w-100" placeholder="Auto-filled from PIN" readonly required>
                     </div>
                     <div class="form-group" style="flex: 1;">
                         <label for="state">State</label>
-                        <input type="text" id="state" name="state" class="input-field w-100" placeholder="e.g. Maharashtra" required>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label for="pincode">Pincode</label>
-                        <input type="text" id="pincode" name="pincode" class="input-field w-100" placeholder="e.g. 400001" required>
+                        <input type="text" id="state" name="state" class="input-field w-100" placeholder="Auto-filled from PIN" readonly required>
                     </div>
                 </div>
 
@@ -158,6 +159,76 @@ document.addEventListener('DOMContentLoaded', function() {
     const paymentOnline = document.getElementById('payment_online');
     const paymentCod = document.getElementById('payment_cod');
     const btnText = document.getElementById('checkoutBtnText');
+    const pincodeInput = document.getElementById('pincode');
+    const cityInput = document.getElementById('city');
+    const stateInput = document.getElementById('state');
+    const pincodeStatus = document.getElementById('pincode-status');
+    
+    // Pincode auto-fill functionality
+    let pincodeTimeout;
+    pincodeInput.addEventListener('input', function() {
+        const pincode = this.value.trim();
+        
+        // Clear previous timeout
+        clearTimeout(pincodeTimeout);
+        
+        // Reset fields
+        cityInput.value = '';
+        stateInput.value = '';
+        pincodeStatus.textContent = '';
+        pincodeStatus.className = 'text-sm';
+        
+        // Validate pincode format
+        if (pincode.length === 6 && /^\d{6}$/.test(pincode)) {
+            pincodeStatus.textContent = 'Fetching location...';
+            pincodeStatus.style.color = '#6b7280';
+            
+            // Debounce API call
+            pincodeTimeout = setTimeout(() => {
+                fetchPincodeDetails(pincode);
+            }, 300);
+        } else if (pincode.length > 0) {
+            pincodeStatus.textContent = 'Enter 6-digit PIN code';
+            pincodeStatus.style.color = '#f59e0b';
+        }
+    });
+    
+    function fetchPincodeDetails(pincode) {
+        // Using India Post PIN Code API
+        fetch(`https://api.postalpincode.in/pincode/${pincode}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data[0].Status === 'Success' && data[0].PostOffice && data[0].PostOffice.length > 0) {
+                    const postOffice = data[0].PostOffice[0];
+                    
+                    // Fill city and state
+                    cityInput.value = postOffice.District || postOffice.Block || '';
+                    stateInput.value = postOffice.State || '';
+                    
+                    // Remove readonly temporarily to allow form submission
+                    cityInput.removeAttribute('readonly');
+                    stateInput.removeAttribute('readonly');
+                    
+                    // Show success message
+                    pincodeStatus.textContent = `✓ ${postOffice.Name}, ${postOffice.District}`;
+                    pincodeStatus.style.color = '#10b981';
+                } else {
+                    // Invalid pincode
+                    pincodeStatus.textContent = '✗ Invalid PIN code';
+                    pincodeStatus.style.color = '#ef4444';
+                    cityInput.removeAttribute('readonly');
+                    stateInput.removeAttribute('readonly');
+                }
+            })
+            .catch(error => {
+                console.error('Pincode lookup error:', error);
+                pincodeStatus.textContent = '✗ Could not fetch location';
+                pincodeStatus.style.color = '#ef4444';
+                // Allow manual entry on error
+                cityInput.removeAttribute('readonly');
+                stateInput.removeAttribute('readonly');
+            });
+    }
     
     // Update button text based on payment method
     document.querySelectorAll('input[name="payment"]').forEach(radio => {
